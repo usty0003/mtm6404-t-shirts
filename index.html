@@ -3,10 +3,97 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>T-Shirts</title>
+  <title>T-Shirts for Sale</title>
+  <style>
+    .tshirt-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* 3 equal columns */
+      gap: 20px; /* Spacing between items */
+    }
+
+    .tshirt {
+      text-align: center;
+    }
+
+    img {
+      width: 200px; /* Larger image size */
+      height: auto;
+    }
+
+    .price {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+      .tshirt-container {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for smaller screens */
+      }
+    }
+
+    @media (max-width: 480px) {
+      .tshirt-container {
+        grid-template-columns: 1fr; /* 1 column for mobile screens */
+      }
+    }
+  </style>
 </head>
 <body>
-  
-  
+  <h1>T-Shirts for Sale</h1>
+  <div class="tshirt-container" id="tshirt-container"></div>
+
+  <script>
+    const tshirts = [
+      { title: 'Blue T-Shirt', image: 'images/blue-t-shirt.jpg', price: 7.99, stock: 4, quantity: 1 },
+      { title: 'Bright Purple T-Shirt', image: 'images/bright-purple-t-shirt.jpg', price: 5.99, stock: 1, quantity: 1 },
+      { title: 'Cobalt Blue T-Shirt', image: 'images/cobalt-blue-t-shirt.jpg', price: 9.99, stock: 5, quantity: 1 },
+      { title: 'Green T-Shirt', image: 'images/green-t-shirt.jpg', price: 6.99, stock: 0, quantity: 1 },
+      { title: 'Grey T-Shirt', image: 'images/grey-t-shirt.jpg', price: 4.99, stock: 2, quantity: 1 },
+      { title: 'Light Green T-Shirt', image: 'images/light-green-t-shirt.jpg', price: 7.99, stock: 4, quantity: 1 },
+      { title: 'Purple T-Shirt', image: 'images/purple-t-shirt.jpg', price: 7.99, stock: 0, quantity: 1 },
+      { title: 'Red T-Shirt', image: 'images/red-t-shirt.jpg', price: 6.99, stock: 3, quantity: 1 },
+      { title: 'Teal T-Shirt', image: 'images/teal-t-shirt.jpg', price: 7.99, stock: 2, quantity: 1 }
+    ];
+
+    function renderTShirts() {
+      const container = document.getElementById('tshirt-container');
+      container.innerHTML = ''; // Clear any existing content
+
+      tshirts.forEach((tshirt, index) => {
+        const tshirtDiv = document.createElement('div');
+        tshirtDiv.classList.add('tshirt');
+        
+        tshirtDiv.innerHTML = `
+          <h2>${tshirt.title}</h2>
+          <img src="${tshirt.image}" alt="${tshirt.title}" />
+          <p class="price">$${tshirt.price.toFixed(2)}</p>
+          <p>Stock: ${tshirt.stock > 0 ? tshirt.stock : 'Out of Stock'}</p>
+          ${tshirt.stock > 0 ? `
+            <label for="quantity-${index}">Quantity: </label>
+            <select id="quantity-${index}">
+              ${[...Array(tshirt.stock).keys()].map(i => `<option value="${i + 1}">${i + 1}</option>`).join('')}
+            </select>
+            <button onclick="buyTShirt(${index})">Buy</button>
+          ` : ''}
+        `;
+        
+        container.appendChild(tshirtDiv);
+      });
+    }
+
+    function buyTShirt(index) {
+      const quantitySelect = document.getElementById(`quantity-${index}`);
+      const selectedQuantity = parseInt(quantitySelect.value);
+
+      // Decrease stock
+      tshirts[index].stock -= selectedQuantity;
+
+      // Re-render the t-shirts to update the stock
+      renderTShirts();
+    }
+
+    // Initial render
+    renderTShirts();
+  </script>
 </body>
 </html>
